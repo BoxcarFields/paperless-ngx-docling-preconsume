@@ -9,6 +9,7 @@ This project provides a post-consume script for Paperless-ngx that automatically
 - **Direct API Integration**: Updates the document content directly via the Paperless API, ensuring reliable indexing without relying on fragile sidecar file detection.
 - **Format Support**: Handles PDFs, Images, DOCX, PPTX, HTML, and more (everything Docling supports).
 - **Graceful Fallback**: Skips processing if Docling is unreachable or the file type is unsupported, allowing Paperless to proceed with its default behavior.
+- **Resource Optimized**: Automatically triggers Docling memory cleanup after each conversion and includes configuration to limit worker memory usage.
 
 ## Prerequisites
 1.  **Paperless-ngx**: A running instance of Paperless-ngx.
@@ -27,6 +28,7 @@ Add the Docling service to your `docker-compose.yml`.
     container_name: docling
     environment:
       - UVICORN_WORKERS=1
+      - DOCLING_MAX_WORKERS=1
       - DOCLING_SERVE_MAX_MEM=8G
       - DOCLING_SERVE_ENABLE_UI=true
       # Critical: Set HOME to a custom writable path for cache/models
@@ -100,6 +102,7 @@ You can configure the Docling endpoint by setting an environment variable in you
 5.  Docling returns the extracted Markdown content.
 6.  The script sanitizes the content (fixing unicode artifacts) and patches the document via the Paperless API.
 7.  Paperless indexes the new high-quality text.
+8.  The script triggers a memory cleanup on the Docling server to prevent resource exhaustion.
 
 ## Troubleshooting
 - **Permission Denied in Docling logs**: Ensure you have set `HOME=/home/docling` (or another writable path) and mounted the volume correctly as shown in the Installation step.

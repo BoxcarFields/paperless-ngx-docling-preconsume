@@ -113,6 +113,12 @@ API_RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X PATCH "$PAPERLESS_API_U
     -H "Content-Type: application/json" \
     -d "$JSON_PAYLOAD")
 
+# Explicitly clear Docling converters to free memory
+# This is crucial as Docling does not automatically unload models/buffers
+echo "Triggering Docling memory cleanup..."
+curl -s -X POST "${DOCLING_BASE}/v1/clear/converters" >/dev/null
+curl -s -X POST "${DOCLING_BASE}/v1/clear/results" >/dev/null || true # Optional: clear results too if available
+
 if [ "$API_RESPONSE" -eq 200 ]; then
     echo "Successfully updated document #$DOCUMENT_ID with Docling content."
 else

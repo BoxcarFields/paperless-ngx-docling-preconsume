@@ -88,3 +88,7 @@ You can configure the Docling endpoint by setting an environment variable in you
 ## Troubleshooting
 - **Permission Denied in Docling logs**: Ensure you have set `HOME=/home/docling` (or another writable path) and mounted the volume correctly as shown in the Installation step.
 - **Script fails**: Check Paperless logs (`docker logs paperless-ngx`) for output from the pre-consume script.
+
+## License
+
+This project is licensed under the MIT License. Use it freely in your own homelab or project!
